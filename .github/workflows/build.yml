@@ -1,0 +1,43 @@
+name: Build CloudStream APK
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # BUILD (ini yang tadi WORK)
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+
+      # DEBUG – biar kelihatan APK memang ada
+      - name: List APK outputs
+        run: |
+          echo "=== APK FILES ==="
+          find . -name "*.apk"
+
+      # UPLOAD – dibuat GENERIK tapi AMAN
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CloudStream-APK
+          path: |
+            **/build/outputs/**/*.apk
