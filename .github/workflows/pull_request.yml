@@ -1,6 +1,6 @@
-name: Artifact Build
+name: Build
 
-on: [pull_request]
+on: 
 
 jobs:
   build:
